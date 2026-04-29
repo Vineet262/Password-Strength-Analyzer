@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Password Strength Analyzer - Evaluate, analyze, and improve your password security with real-time strength analysis, entropy calculation, and smart suggestions.">
+    <title>CipherGuard — Password Strength Analyzer</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Animated Background -->
+    <div class="bg-animation">
+        <div class="bg-orb bg-orb-1"></div>
+        <div class="bg-orb bg-orb-2"></div>
+        <div class="bg-orb bg-orb-3"></div>
+        <div class="bg-grid"></div>
+    </div>
+
+    <!-- Header -->
+    <header class="header" id="header">
+        <div class="header-inner">
+            <div class="logo" id="logo">
+                <div class="logo-icon">
+                    <svg viewBox="0 0 40 40" fill="none">
+                        <rect x="4" y="18" width="32" height="20" rx="4" stroke="url(#logoGrad)" stroke-width="2.5"/>
+                        <path d="M12 18V12C12 7.58 15.58 4 20 4C24.42 4 28 7.58 28 12V18" stroke="url(#logoGrad)" stroke-width="2.5" stroke-linecap="round"/>
+                        <circle cx="20" cy="28" r="3" fill="url(#logoGrad)"/>
+                        <defs>
+                            <linearGradient id="logoGrad" x1="4" y1="4" x2="36" y2="38">
+                                <stop stop-color="#6366f1"/>
+                                <stop offset="1" stop-color="#06b6d4"/>
+                            </linearGradient>
+                        </defs>
+                    </svg>
+                </div>
+                <div class="logo-text">
+                    <span class="logo-name">CipherGuard</span>
+                    <span class="logo-tag">Password Analyzer</span>
+                </div>
+            </div>
+            <nav class="nav" id="nav">
+                <a href="#analyzer" class="nav-link active" data-section="analyzer" id="nav-analyzer">Analyzer</a>
+                <a href="#generator" class="nav-link" data-section="generator" id="nav-generator">Generator</a>
+                <a href="#history" class="nav-link" data-section="history" id="nav-history">History</a>
+                <a href="#learn" class="nav-link" data-section="learn" id="nav-learn">Learn</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="main">
+        <!-- ========== ANALYZER SECTION ========== -->
+        <section class="section section-active" id="analyzer">
+            <div class="section-header">
+                <h1 class="section-title">Password Strength <span class="gradient-text">Analyzer</span></h1>
+                <p class="section-subtitle">Enter your password below for a comprehensive real-time security analysis</p>
+            </div>
+
+            <div class="analyzer-container">
+                <!-- Password Input Card -->
+                <div class="glass-card card-input" id="card-input">
+                    <div class="input-wrapper">
+                        <div class="input-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <rect x="3" y="11" width="18" height="11" rx="2"/>
+                                <path d="M7 11V7a5 5 0 0110 0v4"/>
+                            </svg>
+                        </div>
+                        <input type="password" id="password-input" class="password-input" placeholder="Enter your password..." autocomplete="off" spellcheck="false">
+                        <button class="toggle-visibility" id="toggle-visibility" title="Toggle password visibility">
+                            <svg class="eye-open" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                                <circle cx="12" cy="12" r="3"/>
+                            </svg>
+                            <svg class="eye-closed" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none">
+                                <path d="M17.94 17.94A10.07 10.07 0 0112 20c-7 0-11-8-11-8a18.45 18.45 0 015.06-5.94M9.9 4.24A9.12 9.12 0 0112 4c7 0 11 8 11 8a18.5 18.5 0 01-2.16 3.19m-6.72-1.07a3 3 0 11-4.24-4.24"/>
+                                <line x1="1" y1="1" x2="23" y2="23"/>
+                            </svg>
+                        </button>
+                    </div>
+
+                    <!-- Strength Bar -->
+                    <div class="strength-bar-container" id="strength-bar-container">
+                        <div class="strength-bar">
+                            <div class="strength-bar-fill" id="strength-bar-fill"></div>
+                        </div>
+                        <div class="strength-label-row">
+                            <span class="strength-label" id="strength-label">Enter a password</span>
+                            <span class="strength-score" id="strength-score">0 / 100</span>
+                        </div>
+                    </div>
+
+                    <!-- Crack Time -->
+                    <div class="crack-time-card" id="crack-time-card">
+                        <div class="crack-time-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <circle cx="12" cy="12" r="10"/>
+                                <polyline points="12 6 12 12 16 14"/>
+                            </svg>
+                        </div>
+                        <div class="crack-time-info">
+                            <span class="crack-time-label">Estimated Crack Time</span>
+                            <span class="crack-time-value" id="crack-time-value">—</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Analysis Grid -->
+                <div class="analysis-grid">
+                    <!-- Entropy Card -->
+                    <div class="glass-card card-metric" id="card-entropy">
+                        <div class="metric-header">
+                            <div class="metric-icon entropy-icon">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M12 2L2 7l10 5 10-5-10-5z"/>
+                                    <path d="M2 17l10 5 10-5"/>
+                                    <path d="M2 12l10 5 10-5"/>
+                                </svg>
+                            </div>
+                            <span class="metric-title">Entropy</span>
+                        </div>
+                        <div class="metric-value" id="entropy-value">0</div>
+                        <div class="metric-unit">bits</div>
+                        <div class="metric-bar"><div class="metric-bar-fill" id="entropy-bar"></div></div>
+                    </div>
+
+                    <!-- Length Card -->
+                    <div class="glass-card card-metric" id="card-length">
+                        <div class="metric-header">
+                            <div class="metric-icon length-icon">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <line x1="4" y1="9" x2="20" y2="9"/>
+                                    <line x1="4" y1="15" x2="20" y2="15"/>
+                                    <line x1="10" y1="3" x2="8" y2="21"/>
+                                    <line x1="16" y1="3" x2="14" y2="21"/>
+                                </svg>
+                            </div>
+                            <span class="metric-title">Length</span>
+                        </div>
+                        <div class="metric-value" id="length-value">0</div>
+                        <div class="metric-unit">characters</div>
+                        <div class="metric-bar"><div class="metric-bar-fill" id="length-bar"></div></div>
+                    </div>
+
+                    <!-- Charset Card -->
+                    <div class="glass-card card-metric" id="card-charset">
+                        <div class="metric-header">
+                            <div class="metric-icon charset-icon">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <polyline points="4 7 4 4 20 4 20 7"/>
+                                    <line x1="9" y1="20" x2="15" y2="20"/>
+                                    <line x1="12" y1="4" x2="12" y2="20"/>
+                                </svg>
+                            </div>
+                            <span class="metric-title">Charset Size</span>
+                        </div>
+                        <div class="metric-value" id="charset-value">0</div>
+                        <div class="metric-unit">possible chars</div>
+                        <div class="metric-bar"><div class="metric-bar-fill" id="charset-bar"></div></div>
+                    </div>
+
+                    <!-- Uniqueness Card -->
+                    <div class="glass-card card-metric" id="card-uniqueness">
+                        <div class="metric-header">
+                            <div class="metric-icon uniqueness-icon">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                                </svg>
+                            </div>
+                            <span class="metric-title">Uniqueness</span>
+                        </div>
+                        <div class="metric-value" id="uniqueness-value">0%</div>
+                        <div class="metric-unit">unique chars</div>
+                        <div class="metric-bar"><div class="metric-bar-fill" id="uniqueness-bar"></div></div>
+                    </div>
+                </div>
+
+                <!-- Criteria Checklist -->
+                <div class="glass-card card-checklist" id="card-checklist">
+                    <h2 class="card-title">Complexity Checklist</h2>
+                    <div class="checklist-grid">
+                        <div class="checklist-item" id="check-length">
+                            <div class="check-icon"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>
+                            <span>At least 8 characters</span>
+                        </div>
+                        <div class="checklist-item" id="check-uppercase">
+                            <div class="check-icon"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>
+                            <span>Uppercase letter (A-Z)</span>
+                        </div>
+                        <div class="checklist-item" id="check-lowercase">
+                            <div class="check-icon"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>
+                            <span>Lowercase letter (a-z)</span>
+                        </div>
+                        <div class="checklist-item" id="check-number">
+                            <div class="check-icon"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>
+                            <span>Number (0-9)</span>
+                        </div>
+                        <div class="checklist-item" id="check-special">
+                            <div class="check-icon"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>
+                            <span>Special character (!@#$...)</span>
+                        </div>
+                        <div class="checklist-item" id="check-no-common">
+                            <div class="check-icon"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>
+                            <span>Not a common password</span>
+                        </div>
+                        <div class="checklist-item" id="check-no-sequence">
+                            <div class="check-icon"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>
+                            <span>No sequential patterns</span>
+                        </div>
+                        <div class="checklist-item" id="check-no-repeat">
+                            <div class="check-icon"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>
+                            <span>No repeated characters (3+)</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Suggestions Card -->
+                <div class="glass-card card-suggestions" id="card-suggestions">
+                    <h2 class="card-title">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:20px;height:20px;margin-right:8px">
+                            <circle cx="12" cy="12" r="10"/>
+                            <line x1="12" y1="16" x2="12" y2="12"/>
+                            <line x1="12" y1="8" x2="12.01" y2="8"/>
+                        </svg>
+                        Improvement Suggestions
+                    </h2>
+                    <div class="suggestions-list" id="suggestions-list">
+                        <div class="suggestion-item suggestion-neutral">
+                            <span class="suggestion-icon">💡</span>
+                            <span>Start typing to get personalized suggestions</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Password Reuse Check -->
+                <div class="glass-card card-reuse" id="card-reuse">
+                    <h2 class="card-title">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:20px;height:20px;margin-right:8px">
+                            <path d="M21 12a9 9 0 11-6.22-8.56"/>
+                            <polyline points="21 3 21 12 12 12" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                        Password Reuse Detection
+                    </h2>
+                    <div class="reuse-status" id="reuse-status">
+                        <div class="reuse-badge reuse-neutral" id="reuse-badge">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                            <span id="reuse-text">Enter a password to check</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ========== GENERATOR SECTION ========== -->
+        <section class="section" id="generator">
+            <div class="section-header">
+                <h1 class="section-title">Secure Password <span class="gradient-text">Generator</span></h1>
+                <p class="section-subtitle">Generate cryptographically strong passwords tailored to your needs</p>
+            </div>
+
+            <div class="generator-container">
+                <div class="glass-card card-generator" id="card-generator">
+                    <!-- Generated Password Display -->
+                    <div class="generated-password-display" id="generated-password-display">
+                        <span class="generated-password" id="generated-password">Click Generate</span>
+                        <div class="gen-actions">
+                            <button class="gen-btn" id="copy-generated" title="Copy to clipboard">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <rect x="9" y="9" width="13" height="13" rx="2"/>
+                                    <path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/>
+                                </svg>
+                            </button>
+                            <button class="gen-btn" id="regenerate-btn" title="Regenerate">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <polyline points="23 4 23 10 17 10"/>
+                                    <path d="M20.49 15a9 9 0 11-2.12-9.36L23 10"/>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Generator Options -->
+                    <div class="gen-options">
+                        <div class="gen-option-row">
+                            <label class="gen-label" for="gen-length-slider">Password Length</label>
+                            <div class="gen-slider-row">
+                                <input type="range" id="gen-length-slider" class="gen-slider" min="4" max="64" value="16">
+                                <span class="gen-length-display" id="gen-length-display">16</span>
+                            </div>
+                        </div>
+
+                        <div class="gen-toggles">
+                            <label class="gen-toggle" id="gen-toggle-upper">
+                                <input type="checkbox" checked>
+                                <span class="toggle-switch"></span>
+                                <span>Uppercase (A-Z)</span>
+                            </label>
+                            <label class="gen-toggle" id="gen-toggle-lower">
+                                <input type="checkbox" checked>
+                                <span class="toggle-switch"></span>
+                                <span>Lowercase (a-z)</span>
+                            </label>
+                            <label class="gen-toggle" id="gen-toggle-numbers">
+                                <input type="checkbox" checked>
+                                <span class="toggle-switch"></span>
+                                <span>Numbers (0-9)</span>
+                            </label>
+                            <label class="gen-toggle" id="gen-toggle-symbols">
+                                <input type="checkbox" checked>
+                                <span class="toggle-switch"></span>
+                                <span>Symbols (!@#$%...)</span>
+                            </label>
+                            <label class="gen-toggle" id="gen-toggle-ambiguous">
+                                <input type="checkbox">
+                                <span class="toggle-switch"></span>
+                                <span>Exclude Ambiguous (0O, 1lI)</span>
+                            </label>
+                        </div>
+
+                        <button class="btn-generate" id="btn-generate">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
+                            </svg>
+                            Generate Password
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Bulk Generator -->
+                <div class="glass-card card-bulk" id="card-bulk">
+                    <h2 class="card-title">Bulk Generator</h2>
+                    <p class="card-desc">Generate multiple passwords at once</p>
+                    <div class="bulk-controls">
+                        <div class="bulk-count-row">
+                            <label for="bulk-count">Count:</label>
+                            <input type="number" id="bulk-count" min="1" max="20" value="5" class="bulk-input">
+                        </div>
+                        <button class="btn-generate btn-bulk" id="btn-bulk-generate">Generate Bulk</button>
+                    </div>
+                    <div class="bulk-results" id="bulk-results"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ========== HISTORY SECTION ========== -->
+        <section class="section" id="history">
+            <div class="section-header">
+                <h1 class="section-title">Password <span class="gradient-text">History</span></h1>
+                <p class="section-subtitle">Track previously analyzed passwords to prevent reuse</p>
+            </div>
+
+            <div class="history-container">
+                <div class="glass-card card-history" id="card-history">
+                    <div class="history-header">
+                        <h2 class="card-title">Analyzed Passwords</h2>
+                        <button class="btn-clear-history" id="btn-clear-history">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polyline points="3 6 5 6 21 6"/>
+                                <path d="M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"/>
+                            </svg>
+                            Clear All
+                        </button>
+                    </div>
+                    <div class="history-list" id="history-list">
+                        <div class="history-empty" id="history-empty">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="width:48px;height:48px;opacity:0.3">
+                                <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/>
+                                <polyline points="14 2 14 8 20 8"/>
+                                <line x1="16" y1="13" x2="8" y2="13"/>
+                                <line x1="16" y1="17" x2="8" y2="17"/>
+                            </svg>
+                            <p>No passwords analyzed yet</p>
+                            <span>Analyzed passwords will appear here</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ========== LEARN SECTION ========== -->
+        <section class="section" id="learn">
+            <div class="section-header">
+                <h1 class="section-title">Security <span class="gradient-text">Knowledge</span></h1>
+                <p class="section-subtitle">Master the fundamentals of password security and cryptography</p>
+            </div>
+
+            <div class="learn-container">
+                <!-- Cryptography Basics -->
+                <div class="glass-card card-learn" id="card-learn-crypto">
+                    <div class="learn-icon learn-icon-crypto">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="3" y="11" width="18" height="11" rx="2"/>
+                            <path d="M7 11V7a5 5 0 0110 0v4"/>
+                        </svg>
+                    </div>
+                    <h3>Cryptographic Hashing</h3>
+                    <p>Passwords are never stored in plain text. They're transformed using <strong>hash functions</strong> like SHA-256, bcrypt, or Argon2 into fixed-length strings. These are <em>one-way functions</em> — you can't reverse the hash to get the original password.</p>
+                    <div class="learn-code">
+                        <code>password123 → SHA-256 → ef92b778...</code>
+                        <code>Password123 → SHA-256 → b2e98ad6...</code>
+                    </div>
+                    <p class="learn-insight">Even a tiny change produces a completely different hash — this is called the <strong>avalanche effect</strong>.</p>
+                </div>
+
+                <!-- Entropy -->
+                <div class="glass-card card-learn" id="card-learn-entropy">
+                    <div class="learn-icon learn-icon-entropy">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M12 2L2 7l10 5 10-5-10-5z"/>
+                            <path d="M2 17l10 5 10-5"/>
+                            <path d="M2 12l10 5 10-5"/>
+                        </svg>
+                    </div>
+                    <h3>Password Entropy</h3>
+                    <p>Entropy measures randomness in bits. Higher entropy = harder to crack. It's calculated as:</p>
+                    <div class="learn-formula">
+                        <code>E = L × log₂(R)</code>
+                    </div>
+                    <p>Where <strong>L</strong> = password length and <strong>R</strong> = size of the character pool (charset). A password using lowercase + uppercase + numbers + symbols has R = 95.</p>
+                    <div class="entropy-scale">
+                        <div class="entropy-level" style="--level-color: #ef4444"><span>< 28 bits</span><span>Very Weak</span></div>
+                        <div class="entropy-level" style="--level-color: #f97316"><span>28-35 bits</span><span>Weak</span></div>
+                        <div class="entropy-level" style="--level-color: #eab308"><span>36-59 bits</span><span>Fair</span></div>
+                        <div class="entropy-level" style="--level-color: #22c55e"><span>60-127 bits</span><span>Strong</span></div>
+                        <div class="entropy-level" style="--level-color: #06b6d4"><span>128+ bits</span><span>Excellent</span></div>
+                    </div>
+                </div>
+
+                <!-- Attack Methods -->
+                <div class="glass-card card-learn" id="card-learn-attacks">
+                    <div class="learn-icon learn-icon-attacks">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/>
+                            <line x1="12" y1="9" x2="12" y2="13"/>
+                            <line x1="12" y1="17" x2="12.01" y2="17"/>
+                        </svg>
+                    </div>
+                    <h3>Common Attack Methods</h3>
+                    <div class="attack-list">
+                        <div class="attack-item">
+                            <strong>Brute Force</strong>
+                            <p>Tries every possible combination. Speed: ~10 billion guesses/sec (GPU)</p>
+                        </div>
+                        <div class="attack-item">
+                            <strong>Dictionary Attack</strong>
+                            <p>Uses lists of common words, names, and known passwords</p>
+                        </div>
+                        <div class="attack-item">
+                            <strong>Rainbow Tables</strong>
+                            <p>Precomputed hash-to-password lookup tables (defeated by salting)</p>
+                        </div>
+                        <div class="attack-item">
+                            <strong>Credential Stuffing</strong>
+                            <p>Reuses leaked username/password pairs across different services</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Best Practices -->
+                <div class="glass-card card-learn" id="card-learn-best">
+                    <div class="learn-icon learn-icon-best">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                        </svg>
+                    </div>
+                    <h3>Best Practices</h3>
+                    <div class="practices-list">
+                        <div class="practice-item">
+                            <span class="practice-num">01</span>
+                            <div>
+                                <strong>Use 12+ Characters</strong>
+                                <p>Length is the most important factor in password strength</p>
+                            </div>
+                        </div>
+                        <div class="practice-item">
+                            <span class="practice-num">02</span>
+                            <div>
+                                <strong>Mix Character Types</strong>
+                                <p>Combine uppercase, lowercase, numbers, and symbols</p>
+                            </div>
+                        </div>
+                        <div class="practice-item">
+                            <span class="practice-num">03</span>
+                            <div>
+                                <strong>Use Passphrases</strong>
+                                <p>Random word combinations like "correct-horse-battery-staple"</p>
+                            </div>
+                        </div>
+                        <div class="practice-item">
+                            <span class="practice-num">04</span>
+                            <div>
+                                <strong>Never Reuse Passwords</strong>
+                                <p>Each account should have a unique password</p>
+                            </div>
+                        </div>
+                        <div class="practice-item">
+                            <span class="practice-num">05</span>
+                            <div>
+                                <strong>Use Password Managers</strong>
+                                <p>Let a manager generate and store complex passwords securely</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Toast Notification -->
+    <div class="toast" id="toast">
+        <span class="toast-icon">✓</span>
+        <span class="toast-text" id="toast-text">Copied to clipboard!</span>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer" id="footer">
+        <div class="footer-inner">
+            <span>CipherGuard &copy; 2026 — Password Security Analyzer</span>
+            <span class="footer-tag">Built with modern cryptography principles</span>
+        </div>
+    </footer>
+
+    <script src="app.js"></script>
+</body>
+</html>
